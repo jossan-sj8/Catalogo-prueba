@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Catálogo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>🛍️ Mi Catálogo</h1>
+        <div class="carrito-icon" onclick="toggleCarrito()">
+            🛒 Carrito (<span id="contador-carrito">0</span>)
+        </div>
+    </header>
+
+    <main>
+        <div id="productos" class="productos-grid">
+            <!-- Los productos se cargarán aquí -->
+        </div>
+    </main>
+
+    <!-- Modal del Carrito -->
+    <div id="modal-carrito" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleCarrito()">&times;</span>
+            <h2>Tu Carrito</h2>
+            <div id="items-carrito"></div>
+            <div class="total">
+                <strong>Total: $<span id="total">0</span></strong>
+            </div>
+            <button class="btn-whatsapp" onclick="enviarPorWhatsApp()">
+                📱 Enviar Pedido por WhatsApp
+            </button>
+            <button class="btn-vaciar" onclick="vaciarCarrito()">
+                🗑️ Vaciar Carrito
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
