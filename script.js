@@ -65,7 +65,7 @@ function renderizarProductos() {
                            value="mayor" 
                            checked>
                     <label for="mayor-${producto.id}">
-                        <strong>Por Mayor (mín. 5 unid.)</strong><br>
+                        <strong>Precio por mayor de 5</strong><br>
                         <span class="precio">$${producto.precioMayor}</span> c/u
                     </label>
                 </div>
@@ -136,7 +136,7 @@ function agregarAlCarrito(idProducto) {
     if (tipo === 'mayor') {
         precioUnitario = producto.precioMayor;
         precioTotal = precioUnitario * cantidad;
-        descripcionTipo = `Por Mayor (${cantidad} unidades)`;
+        descripcionTipo = `Precio por mayor de 5 (${cantidad} unidades)`;
     } else {
         precioUnitario = producto.precioEmbalaje;
         precioTotal = precioUnitario * cantidad;
@@ -258,22 +258,22 @@ function enviarPorWhatsApp() {
     
     carrito.forEach((item, index) => {
         mensaje += `${index + 1}. *${item.nombre}*\n`;
-        mensaje += `   📦 Código: ${item.codigo}\n`;
-        mensaje += `   💰 Modalidad: ${item.descripcionTipo}\n`;
-        mensaje += `   💵 Precio unitario: $${item.precioUnitario}\n`;
+        mensaje += `- Codigo: ${item.codigo}\n`;
+        mensaje += `- Modalidad: ${item.descripcionTipo}\n`;
+        mensaje += `- Precio unitario: $${item.precioUnitario.toLocaleString()}\n`;
         
         if (item.tipo === 'embalaje') {
             const totalUnidades = item.cantidad * item.unidadesPorEmbalaje;
-            mensaje += `   📊 Total unidades: ${totalUnidades}\n`;
+            mensaje += `- Total unidades: ${totalUnidades}\n`;
         }
         
-        mensaje += `   💲 Subtotal: $${item.precioTotal}\n\n`;
+        mensaje += `- Subtotal: $${item.precioTotal.toLocaleString()}\n\n`;
         total += item.precioTotal;
     });
     
-    mensaje += `━━━━━━━━━━━━━━━━\n`;
-    mensaje += `*TOTAL: $${total.toLocaleString()}*\n\n`;
-    mensaje += `¡Gracias por tu pedido! 😊`;
+    mensaje += '------------------------\n';
+    mensaje += `💰 *TOTAL: $${total.toLocaleString()}*\n\n`;
+    mensaje += 'Gracias por tu pedido! 😊';
     
     const numeroWhatsApp = "56983968041";
     
