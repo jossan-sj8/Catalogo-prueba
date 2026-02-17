@@ -158,7 +158,7 @@ function enviarPorWhatsApp() {
     // Formato: código país + número (sin +, sin espacios, sin guiones)
     // Ejemplo Argentina: 5491112345678
     // Ejemplo México: 5215512345678
-    const numeroWhatsApp = "5491112345678";
+    const numeroWhatsApp = "56983968041";
     
     const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(urlWhatsApp, '_blank');
