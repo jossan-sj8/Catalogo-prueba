@@ -253,27 +253,28 @@ function enviarPorWhatsApp() {
         return;
     }
     
-    let mensaje = '🛒 *NUEVO PEDIDO*\n\n';
+    let mensaje = '*NUEVO PEDIDO*\n';
+    mensaje += '===================\n\n';
     let total = 0;
     
     carrito.forEach((item, index) => {
         mensaje += `${index + 1}. *${item.nombre}*\n`;
-        mensaje += `- Codigo: ${item.codigo}\n`;
-        mensaje += `- Modalidad: ${item.descripcionTipo}\n`;
-        mensaje += `- Precio unitario: $${item.precioUnitario.toLocaleString()}\n`;
+        mensaje += `   Codigo: ${item.codigo}\n`;
+        mensaje += `   Modalidad: ${item.descripcionTipo}\n`;
+        mensaje += `   Precio unitario: $${item.precioUnitario.toLocaleString()}\n`;
         
         if (item.tipo === 'embalaje') {
             const totalUnidades = item.cantidad * item.unidadesPorEmbalaje;
-            mensaje += `- Total unidades: ${totalUnidades}\n`;
+            mensaje += `   Total unidades: ${totalUnidades}\n`;
         }
         
-        mensaje += `- Subtotal: $${item.precioTotal.toLocaleString()}\n\n`;
+        mensaje += `   Subtotal: $${item.precioTotal.toLocaleString()}\n\n`;
         total += item.precioTotal;
     });
     
-    mensaje += '------------------------\n';
-    mensaje += `💰 *TOTAL: $${total.toLocaleString()}*\n\n`;
-    mensaje += 'Gracias por tu pedido! 😊';
+    mensaje += '===================\n';
+    mensaje += `*TOTAL: $${total.toLocaleString()}*\n\n`;
+    mensaje += 'Gracias por tu pedido!';
     
     const numeroWhatsApp = "56983968041";
     
