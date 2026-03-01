@@ -3,86 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Gon | Catálogo Corporativo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Project Gon | Catálogo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="header-container">
+        <div class="nav-left">
             <div class="brand">PROJECT<span>GON</span></div>
-            <ul class="nav-menu">
+        </div>
+        <div class="nav-center">
+            <ul class="nav-links">
                 <li><a href="#" class="active">Catálogo</a></li>
                 <li><a href="#">Forma de Compra</a></li>
                 <li><a href="#">Ofertas</a></li>
             </ul>
-            <div class="nav-actions">
-                <div class="carrito-trigger" onclick="toggleCarrito()">
-                    <i class="bi bi-bag-check"></i>
-                    <span class="badge" id="contador-carrito">0</span>
-                </div>
-                <div class="user-profile">
-                    <span>Admin_01</span>
-                    <div class="avatar">PG</div>
-                </div>
+        </div>
+        <div class="nav-right">
+            <i class="bi bi-search"></i>
+            <i class="bi bi-bell"></i>
+            <div class="user-pill" onclick="toggleCarrito()">
+                <i class="bi bi-bag"></i>
+                <span id="contador-carrito">0</span>
+                <span class="user-name">Admin_01</span>
+                <div class="avatar">PG</div>
             </div>
         </div>
     </nav>
 
-    <header class="sub-header">
-        <div class="container">
-            <div class="search-bar">
-                <i class="bi bi-search"></i>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="search-box">
                 <input type="text" id="buscador" placeholder="Buscar por nombre o SKU..." onkeyup="filtrarTodo()">
             </div>
-        </div>
-    </header>
 
-    <div class="main-layout container">
-        <aside class="sidebar">
-            <div class="filter-group">
+            <div class="filter-section">
                 <h4>Categorías</h4>
-                <label><input type="checkbox" class="cat-check" value="Electronica" checked onchange="filtrarTodo()"> Electrónica</label>
-                <label><input type="checkbox" class="cat-check" value="Accesorios" checked onchange="filtrarTodo()"> Accesorios</label>
+                <div class="check-group">
+                    <label><input type="checkbox" class="cat-check" value="Electronica" checked onchange="filtrarTodo()"> Electrónica</label>
+                    <label><input type="checkbox" class="cat-check" value="Accesorios" checked onchange="filtrarTodo()"> Accesorios</label>
+                </div>
             </div>
-            
-            <div class="filter-group">
+
+            <div class="filter-section">
                 <h4>Precio Máximo</h4>
                 <input type="range" id="price-range" min="0" max="1000000" step="10000" value="1000000" oninput="filtrarTodo()">
-                <div class="range-labels">
-                    <span id="price-val">$1.000.000</span>
-                </div>
+                <div class="price-display" id="price-val">$1.000.000</div>
             </div>
         </aside>
 
-        <main id="productos" class="productos-grid"></main>
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Dashboard de Productos</h1>
+                <p>Visualización global de catálogo y precios mayoristas.</p>
+            </header>
+            <div id="productos" class="productos-grid"></div>
+        </main>
     </div>
 
     <div id="modal-carrito" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="drawer">
+            <div class="drawer-header">
                 <h2>Mi Pedido</h2>
-                <span class="close" onclick="toggleCarrito()">&times;</span>
+                <button class="close-btn" onclick="toggleCarrito()">&times;</button>
             </div>
-            <div id="items-carrito" class="carrito-body"></div>
-            <div class="carrito-footer">
-                <div class="total-row">
-                    <span>Total a pagar:</span>
+            <div id="items-carrito" class="drawer-body"></div>
+            <div class="drawer-footer">
+                <div class="total-box">
+                    <span>Total estimado</span>
                     <strong id="total">$0</strong>
                 </div>
-                <button class="btn-whatsapp" onclick="enviarPorWhatsApp()">
+                <button class="btn-primary" onclick="enviarPorWhatsApp()">
                     <i class="bi bi-whatsapp"></i> Finalizar Pedido
                 </button>
-                <button class="btn-vaciar" onclick="vaciarCarrito()">
-                    <i class="bi bi-trash3"></i> Vaciar Carrito
+                <button class="btn-ghost" onclick="vaciarCarrito()">
+                    <i class="bi bi-trash"></i> Vaciar Carrito
                 </button>
             </div>
         </div>
     </div>
 
     <div id="notification" class="notification"></div>
-
     <script src="script.js"></script>
 </body>
 </html>
