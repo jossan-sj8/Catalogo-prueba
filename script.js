@@ -8,6 +8,35 @@ const productos = [
 
 let carrito = JSON.parse(localStorage.getItem('gon_cart')) || [];
 
+// 1. GESTIÓN DE PESTAÑAS (TABS)
+function cambiarTab(tabId, event) {
+    if (event) event.preventDefault();
+    
+    // Ocultar todas las secciones
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.style.display = 'none';
+    });
+    
+    // Quitar clase activa del menú
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Mostrar la sección seleccionada
+    document.getElementById(`tab-${tabId}`).style.display = 'block';
+    if (event) event.target.classList.add('active');
+
+    // Ocultar botón de filtros si no es catálogo
+    const filterBtn = document.getElementById('filter-btn-main');
+    if (tabId !== 'catalogo') {
+        filterBtn.style.display = 'none';
+        // Asegurar que el sidebar se cierre si estaba abierto
+        document.getElementById('sidebar').classList.remove('active');
+    } else {
+        filterBtn.style.display = 'flex';
+    }
+}
+
 // Renderizar Productos
 function renderizarProductos(lista) {
     const container = document.getElementById('productos');
@@ -39,16 +68,19 @@ function renderizarProductos(lista) {
     `).join('');
 }
 
-// Filtros y Buscador
+// Filtros y Buscador - CORREGIDO
 function filtrarTodo() {
     const query = document.getElementById('buscador').value.toLowerCase();
-    const maxPrice = document.getElementById('price-range').value;
+    // Convertir a número para comparación matemática
+    const maxPrice = parseInt(document.getElementById('price-range').value);
     const catsSelected = Array.from(document.querySelectorAll('.cat-check:checked')).map(cb => cb.value);
     
-    document.getElementById('price-val').textContent = `$${parseInt(maxPrice).toLocaleString()}`;
+    // Actualizar visualización del precio
+    document.getElementById('price-val').textContent = `$${maxPrice.toLocaleString()}`;
 
     const filtrados = productos.filter(p => {
         const matchName = p.nombre.toLowerCase().includes(query) || p.codigo.toLowerCase().includes(query);
+        // El precio a comparar debe ser el de Por Mayor (o el que consideres base)
         const matchPrice = p.precioMayor <= maxPrice;
         const matchCat = catsSelected.includes(p.cat);
         return matchName && matchPrice && matchCat;
@@ -164,4 +196,6 @@ function enviarPorWhatsApp() {
 document.addEventListener('DOMContentLoaded', () => {
     renderizarProductos(productos);
     document.getElementById('contador-carrito').textContent = carrito.length;
+    // Forzar el filtrado inicial para que el rango de precio sea coherente
+    filtrarTodo();
 });
