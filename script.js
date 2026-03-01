@@ -1,3 +1,4 @@
+// Base de datos de ejemplo
 const productos = [
     { id: 1, cat: "Electronica", codigo: "SKU-001", nombre: "Cámara Pro DSLR", precioMayor: 45000, precioEmbalaje: 240000, imagen: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500" },
     { id: 2, cat: "Accesorios", codigo: "SKU-002", nombre: "Audífonos Studio Pro", precioMayor: 15000, precioEmbalaje: 80000, imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
@@ -5,15 +6,19 @@ const productos = [
     { id: 4, cat: "Accesorios", codigo: "SKU-004", nombre: "Mouse Gamer Phantom", precioMayor: 12000, precioEmbalaje: 65000, imagen: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500" }
 ];
 
-let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+let carrito = JSON.parse(localStorage.getItem('gon_cart')) || [];
 
+// Renderizar Productos
 function renderizarProductos(lista) {
     const container = document.getElementById('productos');
+    if(!container) return;
+    
     container.innerHTML = lista.map(p => `
         <div class="producto-card">
-            <img src="${p.imagen}">
-            <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 700;">${p.codigo}</div>
-            <h3 style="margin-bottom:1rem">${p.nombre}</h3>
+            <img src="${p.imagen}" alt="${p.nombre}">
+            <div class="sku">${p.codigo}</div>
+            <h3>${p.nombre}</h3>
+            
             <div class="price-selector">
                 <label class="price-card">
                     <input type="radio" name="p-${p.id}" value="mayor" checked id="m-${p.id}">
@@ -26,37 +31,86 @@ function renderizarProductos(lista) {
                     <span class="val">$${p.precioEmbalaje.toLocaleString()}</span>
                 </label>
             </div>
-            <button onclick="agregarAlCarrito(${p.id})" style="width:100%; padding:14px; border-radius:12px; border:none; background:#0f172a; color:white; font-weight:700; cursor:pointer;">
+            
+            <button class="btn-add" onclick="agregarAlCarrito(${p.id})">
                 Añadir al Carrito
             </button>
         </div>
     `).join('');
 }
 
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-
+// Filtros y Buscador
 function filtrarTodo() {
     const query = document.getElementById('buscador').value.toLowerCase();
-    const max = document.getElementById('price-range').value;
-    const cats = Array.from(document.querySelectorAll('.cat-check:checked')).map(c => c.value);
-    document.getElementById('price-val').textContent = `$${parseInt(max).toLocaleString()}`;
-    const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(query) && p.precioMayor <= max && cats.includes(p.cat));
+    const maxPrice = document.getElementById('price-range').value;
+    const catsSelected = Array.from(document.querySelectorAll('.cat-check:checked')).map(cb => cb.value);
+    
+    document.getElementById('price-val').textContent = `$${parseInt(maxPrice).toLocaleString()}`;
+
+    const filtrados = productos.filter(p => {
+        const matchName = p.nombre.toLowerCase().includes(query) || p.codigo.toLowerCase().includes(query);
+        const matchPrice = p.precioMayor <= maxPrice;
+        const matchCat = catsSelected.includes(p.cat);
+        return matchName && matchPrice && matchCat;
+    });
+
     renderizarProductos(filtrados);
 }
 
+// Lógica del Carrito
 function agregarAlCarrito(id) {
     const p = productos.find(x => x.id === id);
     const esMayor = document.getElementById(`m-${id}`).checked;
-    carrito.push({ nombre: p.nombre, tipo: esMayor ? 'Mayor' : 'Embalaje', precio: esMayor ? p.precioMayor : p.precioEmbalaje });
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-    actualizarInterfaz();
+    
+    const item = {
+        cartId: Date.now(),
+        nombre: p.nombre,
+        tipo: esMayor ? 'X Mayor' : 'Embalaje',
+        precio: esMayor ? p.precioMayor : p.precioEmbalaje
+    };
+    
+    carrito.push(item);
+    guardarYActualizar();
     mostrarAlerta(`✅ ${p.nombre} añadido`);
 }
 
-function actualizarInterfaz() {
+function renderizarCarrito() {
+    const container = document.getElementById('items-carrito');
+    let total = 0;
+    
+    container.innerHTML = carrito.map((item, index) => {
+        total += item.precio;
+        return `
+            <div class="cart-item">
+                <div>
+                    <div style="font-weight:800; font-size:0.95rem;">${item.nombre}</div>
+                    <div style="font-size:0.75rem; color:var(--accent); font-weight:700;">${item.tipo}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-weight:800;">$${item.precio.toLocaleString()}</div>
+                    <button onclick="eliminarItem(${index})" style="background:none; border:none; color:var(--danger); font-size:0.75rem; font-weight:700; cursor:pointer;">Eliminar</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('total').textContent = `$${total.toLocaleString()}`;
+}
+
+function eliminarItem(index) {
+    carrito.splice(index, 1);
+    guardarYActualizar();
+    renderizarCarrito();
+}
+
+function guardarYActualizar() {
+    localStorage.setItem('gon_cart', JSON.stringify(carrito));
     document.getElementById('contador-carrito').textContent = carrito.length;
+}
+
+// UI Toggles
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
 }
 
 function toggleCarrito() {
@@ -64,31 +118,10 @@ function toggleCarrito() {
     renderizarCarrito();
 }
 
-function renderizarCarrito() {
-    const container = document.getElementById('items-carrito');
-    let total = 0;
-    container.innerHTML = carrito.map((item, idx) => {
-        total += item.precio;
-        return `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; background:#f8fafc; padding:12px; border-radius:12px; border:1px solid #eee;">
-                <div><strong>${item.nombre}</strong><br><small style="color:#4f46e5">${item.tipo}</small></div>
-                <div style="text-align:right;"><strong>$${item.precio.toLocaleString()}</strong><br>
-                <span onclick="eliminar(${idx})" style="color:#ef4444; cursor:pointer; font-size:0.75rem; font-weight:700;">Eliminar</span></div>
-            </div>`;
-    }).join('');
-    document.getElementById('total').textContent = `$${total.toLocaleString()}`;
-}
-
-function eliminar(idx) {
-    carrito.splice(idx, 1);
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-    actualizarInterfaz();
-    renderizarCarrito();
-}
-
-// LÓGICA DE MODAL DE CONFIRMACIÓN
+// Modales de Confirmación
 function confirmarVaciar() {
-    if(carrito.length > 0) document.getElementById('confirm-modal').style.display = 'flex';
+    if(carrito.length === 0) return;
+    document.getElementById('confirm-modal').style.display = 'flex';
 }
 
 function cerrarConfirmar() {
@@ -97,20 +130,38 @@ function cerrarConfirmar() {
 
 function vaciarCarrito() {
     carrito = [];
-    localStorage.removeItem('carrito');
-    actualizarInterfaz();
+    guardarYActualizar();
     renderizarCarrito();
     cerrarConfirmar();
-    mostrarAlerta("🗑️ Carrito vacío", "#64748b");
+    mostrarAlerta("🗑️ Carrito vaciado con éxito", "#64748b");
 }
 
+// Utilidades
 function mostrarAlerta(msg, color = "#0f172a") {
     const t = document.getElementById('notification');
-    t.textContent = msg; t.style.background = color; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2000);
+    t.textContent = msg;
+    t.style.background = color;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+function enviarPorWhatsApp() {
+    if (carrito.length === 0) {
+        mostrarAlerta("⚠️ El carrito está vacío", "#f59e0b");
+        return;
+    }
+    let msg = "*NUEVO PEDIDO PROJECT GON*\n\n";
+    carrito.forEach((i, idx) => {
+        msg += `${idx + 1}. ${i.nombre} (${i.tipo}) - $${i.precio.toLocaleString()}\n`;
+    });
+    const total = carrito.reduce((s, i) => s + i.precio, 0);
+    msg += `\n*TOTAL A PAGAR: $${total.toLocaleString()}*`;
+    
+    window.open(`https://wa.me/56983968041?text=${encodeURIComponent(msg)}`);
+}
+
+// Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     renderizarProductos(productos);
-    actualizarInterfaz();
+    document.getElementById('contador-carrito').textContent = carrito.length;
 });
