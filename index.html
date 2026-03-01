@@ -3,56 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Corporativo | Project Gon</title>
+    <title>Project Gon | Catálogo Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="main-header">
+    <nav class="navbar">
         <div class="header-container">
-            <div class="brand">PROJECT<span>GON</span> <small>Catálogo</small></div>
-            
+            <div class="brand">PROJECT<span>GON</span></div>
+            <ul class="nav-menu">
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#">Categorías</a></li>
+                <li><a href="#">Ofertas</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="carrito-trigger" onclick="toggleCarrito()">
+                    <i class="bi bi-bag-check"></i>
+                    <span class="badge" id="contador-carrito">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="sub-header">
+        <div class="container">
             <div class="search-bar">
                 <i class="bi bi-search"></i>
-                <input type="text" id="buscador" placeholder="Buscar por nombre o código..." onkeyup="filtrarProductos()">
-            </div>
-
-            <div class="carrito-trigger" onclick="toggleCarrito()">
-                <i class="bi bi-cart3"></i>
-                <span class="badge" id="contador-carrito">0</span>
+                <input type="text" id="buscador" placeholder="Buscar productos por nombre o SKU..." onkeyup="filtrarProductos()">
             </div>
         </div>
     </header>
 
     <main class="container">
-        <div id="productos" class="productos-grid">
-            </div>
+        <div id="productos" class="productos-grid"></div>
     </main>
 
     <div id="modal-carrito" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Mi Pedido</h2>
+                <h2>Tu Carrito</h2>
                 <span class="close" onclick="toggleCarrito()">&times;</span>
             </div>
-            
             <div id="items-carrito" class="carrito-body"></div>
-            
             <div class="carrito-footer">
                 <div class="total-row">
-                    <span>Total estimado:</span>
+                    <span>Total a pagar:</span>
                     <strong id="total">$0</strong>
                 </div>
                 <button class="btn-whatsapp" onclick="enviarPorWhatsApp()">
-                    <i class="bi bi-whatsapp"></i> Confirmar pedido
+                    <i class="bi bi-whatsapp"></i> Finalizar Pedido
                 </button>
-                <button class="btn-link" onclick="vaciarCarrito()">Vaciar carrito</button>
+                <button class="btn-vaciar" onclick="vaciarCarrito()">
+                    <i class="bi bi-trash3"></i> Vaciar Carrito
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="notification" class="notification">Producto añadido con éxito</div>
+    <div id="notification" class="notification"></div>
 
     <script src="script.js"></script>
 </body>
