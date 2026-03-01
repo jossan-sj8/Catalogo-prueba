@@ -41,19 +41,24 @@
             <div class="sidebar-content">
                 <div class="filter-group">
                     <h4>Categorías</h4>
-                    <label class="custom-check">
-                        <input type="checkbox" class="cat-check" value="Electronica" checked onchange="filtrarTodo()">
-                        <span class="checkmark"></span> Electrónica
-                    </label>
-                    <label class="custom-check">
-                        <input type="checkbox" class="cat-check" value="Accesorios" checked onchange="filtrarTodo()">
-                        <span class="checkmark"></span> Accesorios
-                    </label>
+                    <div class="filter-list">
+                        <label class="filter-item">
+                            <input type="checkbox" class="cat-check" value="Electronica" checked onchange="filtrarTodo()">
+                            <span>Electrónica</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="cat-check" value="Accesorios" checked onchange="filtrarTodo()">
+                            <span>Accesorios</span>
+                        </label>
+                    </div>
                 </div>
+            
                 <div class="filter-group">
                     <h4>Rango de Precio</h4>
-                    <input type="range" id="price-range" min="0" max="1000000" step="10000" value="1000000" oninput="filtrarTodo()">
-                    <div class="price-label" id="price-val">$1.000.000</div>
+                    <div class="range-container">
+                        <input type="range" id="price-range" min="0" max="1000000" step="10000" value="1000000" oninput="filtrarTodo()">
+                        <div class="price-val" id="price-val">$1.000.000</div>
+                    </div>
                 </div>
             </div>
         </aside>
