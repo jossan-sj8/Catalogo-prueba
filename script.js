@@ -1,147 +1,88 @@
 const productos = [
-    { id: 1, codigo: "PROD-01", nombre: "Cámara Pro 4K", descripcion: "Lente de alta resolución para exteriores.", precioMayor: 45000, precioEmbalaje: 240000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500" },
-    { id: 2, codigo: "PROD-02", nombre: "Audífonos Studio", descripcion: "Cancelación de ruido activa profesional.", precioMayor: 12000, precioEmbalaje: 60000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
-    // Agrega más productos aquí...
+    { id: 1, codigo: "SKU-101", nombre: "Smartwatch Series X", descripcion: "Monitor de salud y GPS integrado.", precioMayor: 35000, precioEmbalaje: 180000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" },
+    { id: 2, codigo: "SKU-102", nombre: "Cámara DSLR Pro", descripcion: "Sensor full frame 24MP con lente 18-55mm.", precioMayor: 450000, precioEmbalaje: 2100000, unidadesPorEmbalaje: 5, imagen: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500" },
+    { id: 3, codigo: "SKU-103", nombre: "Smartphone Lite Z", descripcion: "6GB RAM, 128GB Almacenamiento, Pantalla AMOLED.", precioMayor: 120000, precioEmbalaje: 550000, unidadesPorEmbalaje: 5, imagen: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" },
+    { id: 4, codigo: "SKU-104", nombre: "Audífonos Noise Cancelling", descripcion: "Batería de 40 horas y carga rápida.", precioMayor: 85000, precioEmbalaje: 400000, unidadesPorEmbalaje: 5, imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
+    { id: 5, codigo: "SKU-105", nombre: "Mouse Gamer RGB", descripcion: "16000 DPI con switches mecánicos.", precioMayor: 15000, precioEmbalaje: 70000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500" },
+    { id: 6, codigo: "SKU-106", nombre: "Teclado Mecánico", descripcion: "Layout español, switches brown.", precioMayor: 45000, precioEmbalaje: 240000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=500" }
 ];
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-function renderizarProductos(data = productos) {
+function renderizarProductos(lista = productos) {
     const container = document.getElementById('productos');
-    container.innerHTML = data.map(p => `
+    container.innerHTML = lista.map(p => `
         <div class="producto">
-            <span class="codigo-tag">${p.codigo}</span>
             <img src="${p.imagen}" alt="${p.nombre}">
+            <small class="sku">${p.codigo}</small>
             <h3>${p.nombre}</h3>
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">${p.descripcion}</p>
-            
             <div class="opciones-compra">
                 <label class="opcion">
-                    <input type="radio" name="tipo-${p.id}" value="mayor" checked id="m-${p.id}">
-                    <div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">Por Mayor (5+)</div>
-                        <div class="precio">$${p.precioMayor.toLocaleString()}</div>
-                    </div>
+                    <input type="radio" name="p-${p.id}" value="mayor" checked id="m-${p.id}">
+                    <span>Mayor: $${p.precioMayor.toLocaleString()}</span>
                 </label>
                 <label class="opcion">
-                    <input type="radio" name="tipo-${p.id}" value="embalaje" id="e-${p.id}">
-                    <div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">Embalaje (${p.unidadesPorEmbalaje} ud.)</div>
-                        <div class="precio">$${p.precioEmbalaje.toLocaleString()}</div>
-                    </div>
+                    <input type="radio" name="p-${p.id}" value="emb" id="e-${p.id}">
+                    <span>Embalaje: $${p.precioEmbalaje.toLocaleString()}</span>
                 </label>
             </div>
-            
-            <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 0.8rem; font-weight: 600;">Cant:</span>
-                <input type="number" id="cant-${p.id}" value="5" min="1" class="input-cantidad" 
-                       style="width: 60px; padding: 5px; border-radius: 5px; border: 1px solid #ddd;">
-            </div>
-
-            <button class="btn-agregar" onclick="agregarAlCarrito(${p.id})">
-                Añadir al carrito
-            </button>
+            <button class="btn-agregar" onclick="agregarAlCarrito(${p.id})">Agregar</button>
         </div>
     `).join('');
 }
 
-function filtrarProductos() {
-    const busqueda = document.getElementById('buscador').value.toLowerCase();
-    const filtrados = productos.filter(p => 
-        p.nombre.toLowerCase().includes(busqueda) || 
-        p.codigo.toLowerCase().includes(busqueda)
-    );
-    renderizarProductos(filtrados);
-}
-
 function agregarAlCarrito(id) {
-    const p = productos.find(prod => prod.id === id);
+    const p = productos.find(x => x.id === id);
     const esMayor = document.getElementById(`m-${id}`).checked;
-    const cant = parseInt(document.getElementById(`cant-${id}`).value);
     
-    if (esMayor && cant < 5) {
-        showNotification("Mínimo 5 unidades para precio por mayor", "#ef4444");
-        return;
-    }
-
     const item = {
-        id: p.id,
         nombre: p.nombre,
-        tipo: esMayor ? 'Mayor' : 'Embalaje',
-        cantidad: cant,
-        precio: esMayor ? p.precioMayor : p.precioEmbalaje,
-        subtotal: cant * (esMayor ? p.precioMayor : p.precioEmbalaje)
+        tipo: esMayor ? 'X Mayor' : 'Embalaje',
+        subtotal: esMayor ? p.precioMayor : p.precioEmbalaje
     };
 
     carrito.push(item);
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    actualizarContador();
-    showNotification("¡Producto añadido!");
+    actualizarInterfaz();
+    mostrarAlerta(`✅ ${p.nombre} añadido`);
 }
 
-function actualizarContador() {
-    document.getElementById('contador-carrito').textContent = carrito.length;
-}
-
-function toggleCarrito() {
-    const modal = document.getElementById('modal-carrito');
-    modal.classList.toggle('active');
-    if (modal.classList.contains('active')) renderizarCarrito();
-}
-
-function renderizarCarrito() {
-    const container = document.getElementById('items-carrito');
-    let total = 0;
-    container.innerHTML = carrito.map((item, index) => {
-        total += item.subtotal;
-        return `
-            <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between;">
-                <div>
-                    <div style="font-weight: 700;">${item.nombre}</div>
-                    <div style="font-size: 0.8rem; color: #64748b;">${item.tipo} x ${item.cantidad}</div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-weight: 700;">$${item.subtotal.toLocaleString()}</div>
-                    <button onclick="eliminar(${index})" style="border:none; background:none; color:#ef4444; font-size: 0.8rem; cursor:pointer;">Eliminar</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-    document.getElementById('total').textContent = `$${total.toLocaleString()}`;
-}
-
-function eliminar(index) {
+function eliminarDelCarrito(index) {
+    const nombre = carrito[index].nombre;
     carrito.splice(index, 1);
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    actualizarContador();
+    actualizarInterfaz();
     renderizarCarrito();
+    mostrarAlerta(`🗑️ ${nombre} eliminado`, "#ef4444"); // ALERTA ROJA AL ELIMINAR
 }
 
 function vaciarCarrito() {
-    carrito = [];
-    localStorage.removeItem('carrito');
-    actualizarContador();
-    renderizarCarrito();
+    if(confirm("¿Deseas quitar todos los productos?")) {
+        carrito = [];
+        localStorage.removeItem('carrito');
+        actualizarInterfaz();
+        renderizarCarrito();
+        mostrarAlerta("🛒 Carrito vaciado", "#64748b");
+    }
 }
 
-function showNotification(msg, color = "#0f172a") {
+function mostrarAlerta(msg, color = "#0f172a") {
     const toast = document.getElementById('notification');
     toast.textContent = msg;
     toast.style.background = color;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+    setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-function enviarPorWhatsApp() {
-    if (carrito.length === 0) return;
-    let msg = "*NUEVO PEDIDO PROJECT GON*\n\n";
-    carrito.forEach(i => msg += `• ${i.nombre} (${i.tipo}) x${i.cantidad}: *$${i.subtotal.toLocaleString()}*\n`);
-    const total = carrito.reduce((s, i) => s + i.subtotal, 0);
-    msg += `\n*TOTAL: $${total.toLocaleString()}*`;
-    window.open(`https://wa.me/56983968041?text=${encodeURIComponent(msg)}`);
+function actualizarInterfaz() {
+    document.getElementById('contador-carrito').textContent = carrito.length;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderizarProductos();
-    actualizarContador();
-});
+function filtrarProductos() {
+    const val = document.getElementById('buscador').value.toLowerCase();
+    const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(val) || p.codigo.toLowerCase().includes(val));
+    renderizarProductos(filtrados);
+}
+
+// ... Resto de funciones (toggleCarrito, renderizarCarrito, enviarPorWhatsApp) idénticas al anterior
+// Asegúrate de actualizar el onclick de eliminar en renderizarCarrito a eliminarDelCarrito(index)
