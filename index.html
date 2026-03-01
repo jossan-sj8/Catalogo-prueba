@@ -13,12 +13,13 @@
         <div class="nav-container">
             <div class="brand">PROJECT<span>GON</span></div>
             <ul class="nav-menu">
-                <li><a href="#" class="active">Catálogo</a></li>
-                <li><a href="#">Forma de Compra</a></li>
-                <li><a href="#">Ofertas</a></li>
+                <li><a href="#" class="nav-link active" onclick="cambiarTab('catalogo', event)">Catálogo</a></li>
+                <li><a href="#" class="nav-link" onclick="cambiarTab('forma-compra', event)">Forma de Compra</a></li>
+                <li><a href="#" class="nav-link" onclick="cambiarTab('ofertas', event)">Ofertas</a></li>
+                <li><a href="#" class="nav-link" onclick="cambiarTab('contacto', event)">Contacto</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="btn-filter-toggle" onclick="toggleSidebar()">
+                <button class="btn-filter-toggle" id="filter-btn-main" onclick="toggleSidebar()">
                     <i class="bi bi-sliders"></i> Filtros
                 </button>
                 <div class="carrito-pill" onclick="toggleCarrito()">
@@ -29,43 +30,65 @@
         </div>
     </nav>
 
-    <div class="search-hero">
-        <div class="search-wrapper">
-            <i class="bi bi-search"></i>
-            <input type="text" id="buscador" placeholder="¿Qué estás buscando hoy? (Nombre o SKU...)" onkeyup="filtrarTodo()">
+    <div id="tab-catalogo" class="tab-content section-active">
+        <div class="search-hero">
+            <div class="search-wrapper">
+                <i class="bi bi-search"></i>
+                <input type="text" id="buscador" placeholder="¿Qué estás buscando hoy? (Nombre o SKU...)" onkeyup="filtrarTodo()">
+            </div>
+        </div>
+
+        <div class="app-layout">
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <div class="filter-group">
+                        <h4>Categorías</h4>
+                        <div class="filter-list">
+                            <label class="filter-item">
+                                <input type="checkbox" class="cat-check" value="Electronica" checked onchange="filtrarTodo()">
+                                <span>Electrónica</span>
+                            </label>
+                            <label class="filter-item">
+                                <input type="checkbox" class="cat-check" value="Accesorios" checked onchange="filtrarTodo()">
+                                <span>Accesorios</span>
+                            </label>
+                        </div>
+                    </div>
+                
+                    <div class="filter-group">
+                        <h4>Rango de Precio</h4>
+                        <div class="range-container">
+                            <input type="range" id="price-range" min="0" max="1000000" step="10000" value="1000000" oninput="filtrarTodo()">
+                            <div class="price-val" id="price-val">$1.000.000</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <div id="productos" class="productos-grid"></div>
+            </main>
         </div>
     </div>
 
-    <div class="app-layout">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-content">
-                <div class="filter-group">
-                    <h4>Categorías</h4>
-                    <div class="filter-list">
-                        <label class="filter-item">
-                            <input type="checkbox" class="cat-check" value="Electronica" checked onchange="filtrarTodo()">
-                            <span>Electrónica</span>
-                        </label>
-                        <label class="filter-item">
-                            <input type="checkbox" class="cat-check" value="Accesorios" checked onchange="filtrarTodo()">
-                            <span>Accesorios</span>
-                        </label>
-                    </div>
-                </div>
-            
-                <div class="filter-group">
-                    <h4>Rango de Precio</h4>
-                    <div class="range-container">
-                        <input type="range" id="price-range" min="0" max="1000000" step="10000" value="1000000" oninput="filtrarTodo()">
-                        <div class="price-val" id="price-val">$1.000.000</div>
-                    </div>
-                </div>
-            </div>
-        </aside>
+    <div id="tab-forma-compra" class="tab-content" style="display:none; padding: 100px 20px; text-align: center;">
+        <h2>Forma de Compra</h2>
+        <p style="margin-top:20px; color: var(--slate-600);">Selecciona tus productos, agrégalos al carrito y finaliza tu pedido vía WhatsApp.</p>
+    </div>
 
-        <main class="main-content">
-            <div id="productos" class="productos-grid"></div>
-        </main>
+    <div id="tab-ofertas" class="tab-content" style="display:none; padding: 100px 20px; text-align: center;">
+        <h2>Ofertas Exclusivas</h2>
+        <p style="margin-top:20px; color: var(--slate-600);">Próximamente encontrarás promociones por tiempo limitado aquí.</p>
+    </div>
+
+    <div id="tab-contacto" class="tab-content" style="display:none; padding: 100px 20px; text-align: center;">
+        <h2>Contáctanos</h2>
+        <p style="margin-top:20px; color: var(--slate-600);">Puedes escribirnos directamente a nuestro WhatsApp para dudas personalizadas.</p>
+        <div style="margin-top:30px;">
+            <a href="https://wa.me/56983968041" style="color: var(--accent); font-weight: 700; text-decoration: none; font-size: 1.2rem;">
+                <i class="bi bi-whatsapp"></i> +56 9 8396 8041
+            </a>
+        </div>
     </div>
 
     <div id="modal-carrito" class="modal-overlay">
