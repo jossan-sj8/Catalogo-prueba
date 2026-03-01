@@ -30,7 +30,7 @@
         </div>
     </nav>
 
-    <div id="tab-catalogo" class="tab-content section-active">
+    <div id="tab-catalogo" class="tab-content">
         <div class="search-hero">
             <div class="search-wrapper">
                 <i class="bi bi-search"></i>
@@ -71,22 +71,69 @@
         </div>
     </div>
 
-    <div id="tab-forma-compra" class="tab-content" style="display:none; padding: 100px 20px; text-align: center;">
-        <h2>Forma de Compra</h2>
-        <p style="margin-top:20px; color: var(--slate-600);">Selecciona tus productos, agrégalos al carrito y finaliza tu pedido vía WhatsApp.</p>
+    <div id="tab-forma-compra" class="tab-content" style="display:none; padding: 60px 20px;">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <h2 style="text-align: center; font-size: 2.2rem; margin-bottom: 40px; font-weight: 800;">
+                ¿Cómo realizar tu <span style="color: var(--accent);">Pedido?</span>
+            </h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 60px;">
+                <div style="background: white; padding: 30px; border-radius: 24px; border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow);">
+                    <div style="width: 50px; height: 50px; background: #e0e7ff; color: var(--accent); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.2rem; font-weight: 800;">1</div>
+                    <h4 style="margin-bottom: 12px; font-size: 1.1rem;">Arma tu Carrito</h4>
+                    <p style="color: var(--slate-600); font-size: 0.9rem; line-height: 1.5;">Navega por el catálogo y añade los productos. Elige precio X Mayor o Embalaje según tu necesidad.</p>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: 24px; border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow);">
+                    <div style="width: 50px; height: 50px; background: #e0e7ff; color: var(--accent); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.2rem; font-weight: 800;">2</div>
+                    <h4 style="margin-bottom: 12px; font-size: 1.1rem;">Verifica el Detalle</h4>
+                    <p style="color: var(--slate-600); font-size: 0.9rem; line-height: 1.5;">Revisa el icono de la bolsa para confirmar tus productos y ver el subtotal de tu pedido.</p>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: 24px; border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow);">
+                    <div style="width: 50px; height: 50px; background: #dcfce7; color: #16a34a; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.2rem; font-weight: 800;">3</div>
+                    <h4 style="margin-bottom: 12px; font-size: 1.1rem;">WhatsApp Directo</h4>
+                    <p style="color: var(--slate-600); font-size: 0.9rem; line-height: 1.5;">Al finalizar, se enviará el detalle completo a nuestro WhatsApp para concretar pago y envío.</p>
+                </div>
+            </div>
+
+            <div style="background: var(--dark); color: white; padding: 40px; border-radius: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 50px;">
+                <div>
+                    <h5 style="color: #818cf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.8rem; font-weight: 800;">📦 Envíos</h5>
+                    <p style="font-size: 0.9rem; line-height: 1.6; opacity: 0.9;">Envíos a todo Chile vía Starken, Chilexpress y BlueExpress (Modalidad por pagar).</p>
+                </div>
+                <div>
+                    <h5 style="color: #818cf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.8rem; font-weight: 800;">💳 Pagos</h5>
+                    <p style="font-size: 0.9rem; line-height: 1.6; opacity: 0.9;">Transferencia electrónica bancaria, depósitos y efectivo en entregas acordadas.</p>
+                </div>
+                <div>
+                    <h5 style="color: #818cf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.8rem; font-weight: 800;">⏳ Atención</h5>
+                    <p style="font-size: 0.9rem; line-height: 1.6; opacity: 0.9;">Lunes a Viernes: 09:00 - 19:00<br>Sábados: 10:00 - 14:00</p>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <button onclick="cambiarTab('catalogo', event)" style="background: var(--accent); color: white; border: none; padding: 18px 40px; border-radius: 18px; font-weight: 700; cursor: pointer; font-size: 1.1rem; transition: 0.3s; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);">
+                    <i class="bi bi-shop" style="margin-right: 10px;"></i> Empezar a Comprar
+                </button>
+            </div>
+        </div>
     </div>
 
     <div id="tab-ofertas" class="tab-content" style="display:none; padding: 100px 20px; text-align: center;">
-        <h2>Ofertas Exclusivas</h2>
-        <p style="margin-top:20px; color: var(--slate-600);">Próximamente encontrarás promociones por tiempo limitado aquí.</p>
+        <h2 style="font-size: 2.2rem; font-weight: 800;">Ofertas <span style="color: var(--danger);">Exclusivas</span></h2>
+        <p style="margin-top:20px; color: var(--slate-600); max-width: 600px; margin-left: auto; margin-right: auto;">Aquí aparecerán nuestras promociones por tiempo limitado y productos en liquidación.</p>
     </div>
 
     <div id="tab-contacto" class="tab-content" style="display:none; padding: 100px 20px; text-align: center;">
-        <h2>Contáctanos</h2>
-        <p style="margin-top:20px; color: var(--slate-600);">Puedes escribirnos directamente a nuestro WhatsApp para dudas personalizadas.</p>
-        <div style="margin-top:30px;">
-            <a href="https://wa.me/56983968041" style="color: var(--accent); font-weight: 700; text-decoration: none; font-size: 1.2rem;">
-                <i class="bi bi-whatsapp"></i> +56 9 8396 8041
+        <h2 style="font-size: 2.2rem; font-weight: 800;">Ponte en <span style="color: var(--accent);">Contacto</span></h2>
+        <p style="margin-top:20px; color: var(--slate-600);">¿Tienes dudas sobre un producto o envío? Escríbenos.</p>
+        <div style="margin-top:40px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+            <a href="https://wa.me/56983968041" style="text-decoration:none; background: #22c55e; color: white; padding: 15px 30px; border-radius: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                <i class="bi bi-whatsapp"></i> WhatsApp Ventas
+            </a>
+            <a href="mailto:contacto@projectgon.cl" style="text-decoration:none; background: var(--dark); color: white; padding: 15px 30px; border-radius: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                <i class="bi bi-envelope"></i> Enviar Email
             </a>
         </div>
     </div>
@@ -95,7 +142,7 @@
         <div class="carrito-drawer">
             <div class="drawer-header">
                 <h3>Mi Pedido</h3>
-                <button onclick="toggleCarrito()"><i class="bi bi-x-lg"></i></button>
+                <button onclick="toggleCarrito()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
             </div>
             <div id="items-carrito" class="drawer-body"></div>
             <div class="drawer-footer">
@@ -113,7 +160,7 @@
         </div>
     </div>
 
-    <div id="confirm-modal" class="modal-overlay confirm-overlay">
+    <div id="confirm-modal" class="modal-overlay confirm-overlay" style="display: none;">
         <div class="confirm-card">
             <i class="bi bi-exclamation-circle"></i>
             <h4>¿Vaciar carrito?</h4>
@@ -126,6 +173,7 @@
     </div>
 
     <div id="notification" class="notification"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
