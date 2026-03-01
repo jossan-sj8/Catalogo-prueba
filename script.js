@@ -1,285 +1,144 @@
-// Base de datos de productos
 const productos = [
-    {
-        id: 1,
-        codigo: "PROD-001",
-        nombre: "Producto 1",
-        descripcion: "Descripción del producto 1",
-        precioMayor: 1000,        // Precio por unidad comprando 5+
-        precioEmbalaje: 4500,     // Precio del embalaje completo
-        unidadesPorEmbalaje: 6,   // Cuántas unidades trae el embalaje
-        imagen: "https://via.placeholder.com/300x200?text=Producto+1"
-    },
-    {
-        id: 2,
-        codigo: "PROD-002",
-        nombre: "Producto 2",
-        descripcion: "Descripción del producto 2",
-        precioMayor: 1500,
-        precioEmbalaje: 8000,
-        unidadesPorEmbalaje: 6,
-        imagen: "https://via.placeholder.com/300x200?text=Producto+2"
-    },
-    {
-        id: 3,
-        codigo: "PROD-003",
-        nombre: "Producto 3",
-        descripcion: "Descripción del producto 3",
-        precioMayor: 2000,
-        precioEmbalaje: 11000,
-        unidadesPorEmbalaje: 6,
-        imagen: "https://via.placeholder.com/300x200?text=Producto+3"
-    },
-    {
-        id: 4,
-        codigo: "PROD-004",
-        nombre: "Producto 4",
-        descripcion: "Descripción del producto 4",
-        precioMayor: 2500,
-        precioEmbalaje: 14000,
-        unidadesPorEmbalaje: 6,
-        imagen: "https://via.placeholder.com/300x200?text=Producto+4"
-    }
+    { id: 1, codigo: "PROD-01", nombre: "Cámara Pro 4K", descripcion: "Lente de alta resolución para exteriores.", precioMayor: 45000, precioEmbalaje: 240000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500" },
+    { id: 2, codigo: "PROD-02", nombre: "Audífonos Studio", descripcion: "Cancelación de ruido activa profesional.", precioMayor: 12000, precioEmbalaje: 60000, unidadesPorEmbalaje: 6, imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
+    // Agrega más productos aquí...
 ];
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-function renderizarProductos() {
+function renderizarProductos(data = productos) {
     const container = document.getElementById('productos');
-    container.innerHTML = '';
-    
-    productos.forEach(producto => {
-        const div = document.createElement('div');
-        div.className = 'producto';
-        div.innerHTML = `
-            <img src="${producto.imagen}" alt="${producto.nombre}">
-            <div class="codigo">Código: ${producto.codigo}</div>
-            <h3>${producto.nombre}</h3>
-            <p class="descripcion">${producto.descripcion}</p>
+    container.innerHTML = data.map(p => `
+        <div class="producto">
+            <span class="codigo-tag">${p.codigo}</span>
+            <img src="${p.imagen}" alt="${p.nombre}">
+            <h3>${p.nombre}</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">${p.descripcion}</p>
             
             <div class="opciones-compra">
-                <div class="opcion-precio">
-                    <input type="radio" 
-                           id="mayor-${producto.id}" 
-                           name="tipo-${producto.id}" 
-                           value="mayor" 
-                           checked>
-                    <label for="mayor-${producto.id}">
-                        <strong>Precio por mayor de 5</strong><br>
-                        <span class="precio">$${producto.precioMayor}</span> c/u
-                    </label>
-                </div>
-                
-                <div class="opcion-precio">
-                    <input type="radio" 
-                           id="embalaje-${producto.id}" 
-                           name="tipo-${producto.id}" 
-                           value="embalaje">
-                    <label for="embalaje-${producto.id}">
-                        <strong>Por Embalaje (${producto.unidadesPorEmbalaje} unid.)</strong><br>
-                        <span class="precio">$${producto.precioEmbalaje}</span> embalaje
-                    </label>
-                </div>
+                <label class="opcion">
+                    <input type="radio" name="tipo-${p.id}" value="mayor" checked id="m-${p.id}">
+                    <div>
+                        <div style="font-size: 0.75rem; font-weight: 600;">Por Mayor (5+)</div>
+                        <div class="precio">$${p.precioMayor.toLocaleString()}</div>
+                    </div>
+                </label>
+                <label class="opcion">
+                    <input type="radio" name="tipo-${p.id}" value="embalaje" id="e-${p.id}">
+                    <div>
+                        <div style="font-size: 0.75rem; font-weight: 600;">Embalaje (${p.unidadesPorEmbalaje} ud.)</div>
+                        <div class="precio">$${p.precioEmbalaje.toLocaleString()}</div>
+                    </div>
+                </label>
             </div>
             
-            <div class="cantidad-selector">
-                <label for="cantidad-${producto.id}">Cantidad:</label>
-                <input type="number" 
-                       id="cantidad-${producto.id}" 
-                       min="1" 
-                       value="5" 
-                       class="input-cantidad">
+            <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 0.8rem; font-weight: 600;">Cant:</span>
+                <input type="number" id="cant-${p.id}" value="5" min="1" class="input-cantidad" 
+                       style="width: 60px; padding: 5px; border-radius: 5px; border: 1px solid #ddd;">
             </div>
-            
-            <button class="btn-agregar" onclick="agregarAlCarrito(${producto.id})">
-                Agregar al Carrito
+
+            <button class="btn-agregar" onclick="agregarAlCarrito(${p.id})">
+                Añadir al carrito
             </button>
-        `;
-        container.appendChild(div);
-        
-        // Listener para cambiar cantidad mínima según tipo
-        const radioMayor = document.getElementById(`mayor-${producto.id}`);
-        const radioEmbalaje = document.getElementById(`embalaje-${producto.id}`);
-        const inputCantidad = document.getElementById(`cantidad-${producto.id}`);
-        
-        radioMayor.addEventListener('change', () => {
-            inputCantidad.min = 5;
-            if (inputCantidad.value < 5) inputCantidad.value = 5;
-        });
-        
-        radioEmbalaje.addEventListener('change', () => {
-            inputCantidad.min = 1;
-            inputCantidad.value = 1;
-        });
-    });
+        </div>
+    `).join('');
 }
 
-function agregarAlCarrito(idProducto) {
-    const producto = productos.find(p => p.id === idProducto);
+function filtrarProductos() {
+    const busqueda = document.getElementById('buscador').value.toLowerCase();
+    const filtrados = productos.filter(p => 
+        p.nombre.toLowerCase().includes(busqueda) || 
+        p.codigo.toLowerCase().includes(busqueda)
+    );
+    renderizarProductos(filtrados);
+}
+
+function agregarAlCarrito(id) {
+    const p = productos.find(prod => prod.id === id);
+    const esMayor = document.getElementById(`m-${id}`).checked;
+    const cant = parseInt(document.getElementById(`cant-${id}`).value);
     
-    // Obtener tipo seleccionado
-    const radioMayor = document.getElementById(`mayor-${idProducto}`);
-    const tipo = radioMayor.checked ? 'mayor' : 'embalaje';
-    
-    // Obtener cantidad
-    const cantidad = parseInt(document.getElementById(`cantidad-${idProducto}`).value);
-    
-    // Validar cantidad mínima para mayor
-    if (tipo === 'mayor' && cantidad < 5) {
-        alert('La compra por mayor requiere mínimo 5 unidades');
+    if (esMayor && cant < 5) {
+        showNotification("Mínimo 5 unidades para precio por mayor", "#ef4444");
         return;
     }
-    
-    // Calcular precio
-    let precioUnitario, precioTotal, descripcionTipo;
-    
-    if (tipo === 'mayor') {
-        precioUnitario = producto.precioMayor;
-        precioTotal = precioUnitario * cantidad;
-        descripcionTipo = `Precio por mayor de 5 (${cantidad} unidades)`;
-    } else {
-        precioUnitario = producto.precioEmbalaje;
-        precioTotal = precioUnitario * cantidad;
-        const totalUnidades = cantidad * producto.unidadesPorEmbalaje;
-        descripcionTipo = `Por Embalaje (${cantidad} embalaje${cantidad > 1 ? 's' : ''} = ${totalUnidades} unidades)`;
-    }
-    
-    // Verificar si ya existe en carrito con mismo tipo
-    const itemExistente = carrito.find(item => 
-        item.id === idProducto && item.tipo === tipo
-    );
-    
-    if (itemExistente) {
-        itemExistente.cantidad += cantidad;
-        itemExistente.precioTotal = itemExistente.precioUnitario * itemExistente.cantidad;
-    } else {
-        carrito.push({
-            id: producto.id,
-            codigo: producto.codigo,
-            nombre: producto.nombre,
-            tipo: tipo,
-            cantidad: cantidad,
-            precioUnitario: precioUnitario,
-            precioTotal: precioTotal,
-            descripcionTipo: descripcionTipo,
-            unidadesPorEmbalaje: producto.unidadesPorEmbalaje
-        });
-    }
-    
-    guardarCarrito();
-    actualizarContador();
-    alert(`${producto.nombre} agregado al carrito\n${descripcionTipo}\nTotal: $${precioTotal}`);
-}
 
-function guardarCarrito() {
+    const item = {
+        id: p.id,
+        nombre: p.nombre,
+        tipo: esMayor ? 'Mayor' : 'Embalaje',
+        cantidad: cant,
+        precio: esMayor ? p.precioMayor : p.precioEmbalaje,
+        subtotal: cant * (esMayor ? p.precioMayor : p.precioEmbalaje)
+    };
+
+    carrito.push(item);
     localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarContador();
+    showNotification("¡Producto añadido!");
 }
 
 function actualizarContador() {
-    const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-    document.getElementById('contador-carrito').textContent = total;
+    document.getElementById('contador-carrito').textContent = carrito.length;
 }
 
 function toggleCarrito() {
     const modal = document.getElementById('modal-carrito');
     modal.classList.toggle('active');
-    
-    if (modal.classList.contains('active')) {
-        renderizarCarrito();
-    }
+    if (modal.classList.contains('active')) renderizarCarrito();
 }
 
 function renderizarCarrito() {
     const container = document.getElementById('items-carrito');
-    container.innerHTML = '';
-    
-    if (carrito.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #999;">El carrito está vacío</p>';
-        document.getElementById('total').textContent = '0';
-        return;
-    }
-    
     let total = 0;
-    
-    carrito.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'item-carrito';
-        
-        let detalleUnidades = '';
-        if (item.tipo === 'embalaje') {
-            const totalUnidades = item.cantidad * item.unidadesPorEmbalaje;
-            detalleUnidades = `<small style="color: #666;">(${totalUnidades} unidades totales)</small><br>`;
-        }
-        
-        div.innerHTML = `
-            <div class="item-info">
-                <strong>${item.nombre}</strong><br>
-                <small style="color: #888;">Código: ${item.codigo}</small><br>
-                <small style="color: #007bff;">${item.descripcionTipo}</small><br>
-                ${detalleUnidades}
-                <small>Precio unitario: $${item.precioUnitario}</small>
-            </div>
-            <div class="item-acciones">
-                <strong class="item-precio">$${item.precioTotal}</strong>
-                <button onclick="eliminarDelCarrito(${index})" class="btn-eliminar">🗑️</button>
+    container.innerHTML = carrito.map((item, index) => {
+        total += item.subtotal;
+        return `
+            <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between;">
+                <div>
+                    <div style="font-weight: 700;">${item.nombre}</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">${item.tipo} x ${item.cantidad}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-weight: 700;">$${item.subtotal.toLocaleString()}</div>
+                    <button onclick="eliminar(${index})" style="border:none; background:none; color:#ef4444; font-size: 0.8rem; cursor:pointer;">Eliminar</button>
+                </div>
             </div>
         `;
-        container.appendChild(div);
-        total += item.precioTotal;
-    });
-    
-    document.getElementById('total').textContent = total.toLocaleString();
+    }).join('');
+    document.getElementById('total').textContent = `$${total.toLocaleString()}`;
 }
 
-function eliminarDelCarrito(index) {
+function eliminar(index) {
     carrito.splice(index, 1);
-    guardarCarrito();
+    localStorage.setItem('carrito', JSON.stringify(carrito));
     actualizarContador();
     renderizarCarrito();
 }
 
 function vaciarCarrito() {
-    if (confirm('¿Estás seguro de vaciar el carrito?')) {
-        carrito = [];
-        guardarCarrito();
-        actualizarContador();
-        renderizarCarrito();
-    }
+    carrito = [];
+    localStorage.removeItem('carrito');
+    actualizarContador();
+    renderizarCarrito();
+}
+
+function showNotification(msg, color = "#0f172a") {
+    const toast = document.getElementById('notification');
+    toast.textContent = msg;
+    toast.style.background = color;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 function enviarPorWhatsApp() {
-    if (carrito.length === 0) {
-        alert('El carrito está vacío');
-        return;
-    }
-    
-    let mensaje = '*NUEVO PEDIDO*\n';
-    mensaje += '===================\n\n';
-    let total = 0;
-    
-    carrito.forEach((item, index) => {
-        mensaje += `${index + 1}. *${item.nombre}*\n`;
-        mensaje += `   Codigo: ${item.codigo}\n`;
-        mensaje += `   Modalidad: ${item.descripcionTipo}\n`;
-        mensaje += `   Precio unitario: $${item.precioUnitario.toLocaleString()}\n`;
-        
-        if (item.tipo === 'embalaje') {
-            const totalUnidades = item.cantidad * item.unidadesPorEmbalaje;
-            mensaje += `   Total unidades: ${totalUnidades}\n`;
-        }
-        
-        mensaje += `   Subtotal: $${item.precioTotal.toLocaleString()}\n\n`;
-        total += item.precioTotal;
-    });
-    
-    mensaje += '===================\n';
-    mensaje += `*TOTAL: $${total.toLocaleString()}*\n\n`;
-    mensaje += 'Gracias por tu pedido!';
-    
-    const numeroWhatsApp = "56983968041";
-    
-    const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-    window.open(urlWhatsApp, '_blank');
+    if (carrito.length === 0) return;
+    let msg = "*NUEVO PEDIDO PROJECT GON*\n\n";
+    carrito.forEach(i => msg += `• ${i.nombre} (${i.tipo}) x${i.cantidad}: *$${i.subtotal.toLocaleString()}*\n`);
+    const total = carrito.reduce((s, i) => s + i.subtotal, 0);
+    msg += `\n*TOTAL: $${total.toLocaleString()}*`;
+    window.open(`https://wa.me/56983968041?text=${encodeURIComponent(msg)}`);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
