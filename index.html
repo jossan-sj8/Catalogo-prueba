@@ -3,40 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Catálogo</title>
+    <title>Catálogo Corporativo | Project Gon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>🛍️ Mi Catálogo</h1>
-        <div class="carrito-icon" onclick="toggleCarrito()">
-            🛒 Carrito (<span id="contador-carrito">0</span>)
+    <header class="main-header">
+        <div class="header-container">
+            <div class="brand">PROJECT<span>GON</span> <small>Catálogo</small></div>
+            
+            <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" id="buscador" placeholder="Buscar por nombre o código..." onkeyup="filtrarProductos()">
+            </div>
+
+            <div class="carrito-trigger" onclick="toggleCarrito()">
+                <i class="bi bi-cart3"></i>
+                <span class="badge" id="contador-carrito">0</span>
+            </div>
         </div>
     </header>
 
-    <main>
+    <main class="container">
         <div id="productos" class="productos-grid">
-            <!-- Los productos se cargarán aquí -->
-        </div>
+            </div>
     </main>
 
-    <!-- Modal del Carrito -->
     <div id="modal-carrito" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="toggleCarrito()">&times;</span>
-            <h2>Tu Carrito</h2>
-            <div id="items-carrito"></div>
-            <div class="total">
-                <strong>Total: $<span id="total">0</span></strong>
+            <div class="modal-header">
+                <h2>Mi Pedido</h2>
+                <span class="close" onclick="toggleCarrito()">&times;</span>
             </div>
-            <button class="btn-whatsapp" onclick="enviarPorWhatsApp()">
-                📱 Enviar Pedido por WhatsApp
-            </button>
-            <button class="btn-vaciar" onclick="vaciarCarrito()">
-                🗑️ Vaciar Carrito
-            </button>
+            
+            <div id="items-carrito" class="carrito-body"></div>
+            
+            <div class="carrito-footer">
+                <div class="total-row">
+                    <span>Total estimado:</span>
+                    <strong id="total">$0</strong>
+                </div>
+                <button class="btn-whatsapp" onclick="enviarPorWhatsApp()">
+                    <i class="bi bi-whatsapp"></i> Confirmar pedido
+                </button>
+                <button class="btn-link" onclick="vaciarCarrito()">Vaciar carrito</button>
+            </div>
         </div>
     </div>
+
+    <div id="notification" class="notification">Producto añadido con éxito</div>
 
     <script src="script.js"></script>
 </body>
